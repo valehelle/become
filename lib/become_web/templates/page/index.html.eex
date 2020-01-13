@@ -2,7 +2,14 @@
   <h1>Become</h1>
 </section>
 <div>
-  <%= form_for @changeset, Routes.page_path(@conn, :convert), fn f -> %>
-    Name: <%= text_input f, :name %>
+<%= form_for @changeset, Routes.page_path(@conn, :convert), [multipart: true], fn f -> %>
+    <div class="form-group">
+      <label>CSV File</label>
+      <%= file_input f, :path %>
+    </div>
+
+    <div class="form-group">
+      <%= submit "Submit", class: "btn btn-primary" %>
+    </div>
   <% end %>
 </div>
