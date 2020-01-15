@@ -12,7 +12,7 @@ defmodule BecomeWeb.PageController do
     [title | content] = csv
     conversion_rate = get_exchange_rate()
     products = get_product_with_currency(content, conversion_rate)
-    render(conn, "convert.html")
+    render(conn, "convert.html", products: products)
   end
 
   def decode_csv(path) do
@@ -54,6 +54,7 @@ defmodule BecomeWeb.PageController do
         usd = convert_currency(value, convertion_rate, "USD") 
         %{
           "name" => name,
+          "MYR" => value |> Money.to_string(symbol: false),
           "BTC" => btc,
           "JPY" => jpy,
           "THB" => thb,
