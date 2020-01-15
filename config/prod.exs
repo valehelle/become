@@ -20,7 +20,7 @@ config :become, BecomeWeb.Endpoint,
 config :logger, level: :info
 
 
-config :bloodstone, Bloodstone.Repo,
+config :become, Become.Repo,
   url: System.get_env("DATABASE_URL"),
   ssl: true,
   pool_size: 15
