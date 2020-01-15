@@ -1,4 +1,7 @@
 # Become
+Website deployed at https://limitless-lake-66848.herokuapp.com
+
+
 1. What is race condition?
 - It is when there are more than 2 process that try to access a shared resources and try to change them at the same time.
 2. What is a thread-safe function?
