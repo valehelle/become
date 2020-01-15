@@ -10,7 +10,8 @@ defmodule BecomeWeb.PageController do
   def convert(conn, %{"file" => %{"path" => upload}}) do
     csv = decode_csv(upload.path)
     [title | content] = csv
-    Enum.map(content, fn [name, price] -> price end)
+    conversion_rate = get_exchange_rate()
+    products = get_product_with_currency(content, conversion_rate)
     render(conn, "convert.html")
   end
 
@@ -20,21 +21,21 @@ defmodule BecomeWeb.PageController do
     |> Enum.map(fn {:ok, [name, price]} -> [name,price]  end)
   end
 
-  def get_convertion_rate() do
-    country_rate = get_country_convertion_rate()
-    bitcoin_rate = get_bitcoin_convertion_rate()
+  def get_exchange_rate() do
+    country_rate = get_country_exchange_rate()
+    bitcoin_rate = get_bitcoin_exchange_rate()
     Map.merge(country_rate, bitcoin_rate)
     
   end
 
-  def get_country_convertion_rate() do
+  def get_country_exchange_rate() do
     {:ok, %HTTPoison.Response{status_code: 200, body: body}} = HTTPoison.get("https://api.exchangerate-api.com/v4/latest/MYR")
     rates = Poison.decode!(body)
             |> Map.get("rates")
             |> Map.take(["JPY", "THB", "USD"])
   end
 
-  def get_bitcoin_convertion_rate() do
+  def get_bitcoin_exchange_rate() do
     {:ok, %HTTPoison.Response{status_code: 200, body: body}} = HTTPoison.get("https://api.coingecko.com/api/v3/exchange_rates")
     bitcoin_rate = Poison.decode!(body)
             |> Map.get("rates")
@@ -44,19 +45,13 @@ defmodule BecomeWeb.PageController do
   end
 
   def get_product_with_currency(product_list, convertion_rate) do
-    IO.inspect Enum.map(product_list, 
+    Enum.map(product_list, 
       fn [name, price] -> 
-
         {:ok, value} = Money.parse(price, :MYR)
-
         btc = convert_currency(value, convertion_rate, "BTC") 
-
         jpy = convert_currency(value, convertion_rate, "JPY") 
-
         thb = convert_currency(value, convertion_rate, "THB") 
-
         usd = convert_currency(value, convertion_rate, "USD") 
-        
         %{
           "name" => name,
           "BTC" => btc,

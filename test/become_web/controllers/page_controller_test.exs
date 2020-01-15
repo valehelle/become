@@ -1,6 +1,5 @@
 defmodule BecomeWeb.PageControllerTest do
   use BecomeWeb.ConnCase
-  alias Become.Finances.File
   alias BecomeWeb.PageController
 
   describe "index/2" do
@@ -10,10 +9,11 @@ defmodule BecomeWeb.PageControllerTest do
     end
   end
 
+
   describe "convert/2" do
     test "Render the page", %{conn: conn} do
       upload = %Plug.Upload{path: "test/fixtures/test-prices.csv", filename: "test-prices.csv"}
-      conn = post(conn, "/convert", %{ :file => upload })
+      conn = post(conn, "/convert", %{ "file" => %{"path" => upload}})
       assert html_response(conn, 200) =~ "Output"
     end
     test "Convert CSV file into Elixir array." do
@@ -35,30 +35,30 @@ defmodule BecomeWeb.PageControllerTest do
       assert response == expected
     end
     
-    test "Get the conversion rate of JPY, THB, USD" do
-      response = PageController.get_country_convertion_rate()
+    test "Get the exchange rate of JPY, THB, USD" do
+      response = PageController.get_country_exchange_rate()
                  |> Map.keys()
 
       expected = ["JPY","THB","USD"]
       assert response == expected
     end
     
-    test "Get the conversion rate of BTC" do
-      response = PageController.get_bitcoin_convertion_rate()
+    test "Get the exchange rate of BTC" do
+      response = PageController.get_bitcoin_exchange_rate()
                  |> Map.keys()
 
       expected = ["BTC"]
       assert response == expected
     end
     
-    test "Get the conversion rate of JPY, THB, USD, BTC" do
-      response = PageController.get_convertion_rate()
+    test "Get the exchange rate of JPY, THB, USD, BTC" do
+      response = PageController.get_exchange_rate()
                  |> Map.keys()
 
       expected = ["BTC","JPY","THB","USD"]
       assert response == expected
     end
-    @tag :wip
+
     test "Get list of products with all BTC, JPY, THB, USD" do
 
       convertion_rate = %{
@@ -92,7 +92,7 @@ defmodule BecomeWeb.PageControllerTest do
       ]
       assert response == expected
     end
-    @tag :wip
+
     test "Convert currency given a value and exchange rate" do
       convertion_rate = %{
         "USD" => 2
@@ -105,8 +105,6 @@ defmodule BecomeWeb.PageControllerTest do
       assert response == expected
 
     end
-    test "Display the result"
-    test "Returns an error and if the file is not a csv format or have uneven order"
   end
 
 
