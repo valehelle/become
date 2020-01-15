@@ -41,7 +41,8 @@ defmodule BecomeWeb.PageController do
             |> Map.get("rates")
             |> Map.get("myr")
             |> Map.get("value")
-    %{"BTC" => bitcoin_rate}
+
+    %{"BTC" => 1 / bitcoin_rate}
   end
 
   def get_product_with_currency(product_list, convertion_rate) do
