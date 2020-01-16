@@ -1,0 +1,11 @@
+<section class="phx-hero">
+  <h1>Output</h1>
+</section>
+<%= for product <- @products do %>
+  <h1><%= Map.get(product, "name") %> </h1>
+  <h5>MYR <%= Map.get(product, "MYR") %> </h5>
+  <h5>BTC <%= Map.get(product, "BTC") %> </h5>
+  <h5>JPY <%= Map.get(product, "JPY") %> </h5>
+  <h5>THB <%= Map.get(product, "THB") %> </h5>
+  <h5>USD <%= Map.get(product, "USD") %> </h5>
+<% end %>

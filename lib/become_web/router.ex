@@ -17,6 +17,7 @@ defmodule BecomeWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+    post "/convert", PageController, :convert
   end
 
   # Other scopes may use custom stacks.
